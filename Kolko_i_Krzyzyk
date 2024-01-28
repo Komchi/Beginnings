@@ -1,0 +1,106 @@
+import java.util.Scanner;
+
+public class TicTacToe {
+    public static void main(String[] args) {
+        char[][] board = {
+                {' ', ' ', ' '},
+                {' ', ' ', ' '},
+                {' ', ' ', ' '}
+        };
+
+        char currentPlayer = 'X';
+        boolean gameWon = false;
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (!gameWon) {
+            printBoard(board);
+            
+            int[] move = getPlayerMove(scanner);
+
+            
+            if (isValidMove(board, move)) {
+               
+                board[move[0]][move[1]] = currentPlayer;
+
+                
+                if (isWinner(board, currentPlayer)) {
+                    printBoard(board);
+                    System.out.println("Player " + currentPlayer + " wins!");
+                    gameWon = true;
+                } else if (isBoardFull(board)) {
+                    
+                    printBoard(board);
+                    System.out.println("It's a tie!");
+                    gameWon = true;
+                } else {
+                    
+                    currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+                }
+            } else {
+                System.out.println("Invalid move. Try again.");
+            }
+        }
+
+        scanner.close();
+    }
+
+    private static void printBoard(char[][] board) {
+        System.out.println("  A   B   C ");
+        System.out.println("-------------");
+        for (int i = 0; i < 3; i++) {
+            System.out.print((i + 1) + " | ");
+            for (int j = 0; j < 3; j++) {
+                System.out.print(board[i][j] + " | ");
+            }
+            System.out.println();
+            System.out.println("-------------");
+        }
+    }
+
+    private static int[] getPlayerMove(Scanner scanner) {
+        int[] move = new int[2];
+
+        System.out.println("Player, enter your move (row and column): ");
+        System.out.print("Row (1, 2, or 3): ");
+        move[0] = scanner.nextInt() - 1;
+        System.out.print("Column (a, b, or c): ");
+        char colInput = scanner.next().charAt(0);
+        move[1] = colInput - 'a';
+
+        return move;
+    }
+
+    private static boolean isValidMove(char[][] board, int[] move) {
+        int row = move[0];
+        int col = move[1];
+
+        
+        return (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == ' ');
+    }
+
+    private static boolean isWinner(char[][] board, char player) {
+        
+        for (int i = 0; i < 3; i++) {
+            if ((board[i][0] == player && board[i][1] == player && board[i][2] == player) ||
+                    (board[0][i] == player && board[1][i] == player && board[2][i] == player)) {
+                return true;
+            }
+        }
+
+        return (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
+                (board[0][2] == player && board[1][1] == player && board[2][0] == player);
+    }
+
+    private static boolean isBoardFull(char[][] board) {
+        
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == ' ') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
